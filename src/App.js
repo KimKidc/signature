@@ -1,30 +1,46 @@
 import { Component } from "./core/heropy"
+import FruitItem from "./components/FruitItem"
+
 export default class App extends Component {
   constructor() {
     super({
       state: {
-        inputText: ''
+        fruits: [
+          { name: 'Apple', price: 1000 },
+          { name: 'Banana', price: 2000 },
+          { name: 'Cherry', price: 3000 }
+        ]
       }
     })
   }
   render() {
-    this.el.classList.add('search')
-    // innerHTML 작성 시 컬러링 되어 코드를 읽기 쉽게 해주는 확장 프로그램
-    // Comment tagged templates
-    // 백틱기호 앞에 /* html */ 입력 시 동작
+    console.log(this.state.fruits)
+    // console.log(this.state.fruits.map((fruit) => {
+    //   return `<li>${fruit.name}</li>`
+    // }).join('')
+    // )
     this.el.innerHTML = /* html */ `
-    <input />
-    <button>Click!</button>
+      <h1>Fruits</h1>
+      <ul></ul>      
     `
+    const ulEl = this.el.querySelector('ul')
+    ulEl.append(...this.state.fruits
+      .map(fruit => new FruitItem({
+        props: {
+          name: fruit.name,
+          price: fruit.price
+        }
+      }).el)
+    )
 
-    const inputEl = this.el.querySelector('input')
-    inputEl.addEventListener('input', () => {
-      this.state.inputText = inputEl.value
-    })
+    // 구버전 코드
+    // <ul>
+    // ${ this.state.fruits
+    //   .filter(fruit => fruit.price < 3000)
+    //   .map(fruit => `<li>${fruit.name}</li>`)
+    //   .join('')
+    // }
+    // </ul>
 
-    const buttonEl = this.el.querySelector('button')
-    buttonEl.addEventListener('click', () => {
-      console.log(this.state.inputText)
-    })
   }
 }
